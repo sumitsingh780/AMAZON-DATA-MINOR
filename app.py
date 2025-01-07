@@ -36,14 +36,22 @@ user_agents = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36",
 ]
 
-# Function to create a WebDriver instance with a random User-Agent
+# Function to create a WebDriver instance with a random User-Agent and Chromium
 def create_driver():
     options = Options()
     options.headless = True  # Run the browser in headless mode (without opening the window)
     user_agent = random.choice(user_agents)
     options.add_argument(f"user-agent={user_agent}")
     options.add_argument("--disable-blink-features=AutomationControlled")
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    
+    # Ensure the driver uses Chromium instead of Google Chrome
+    options.binary_location = "/usr/bin/chromium"  # Adjust the path if necessary
+    
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager().install()),
+        options=options
+    )
+    
     return driver
 
 # Function to extract size and color data from the product page
